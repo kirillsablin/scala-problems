@@ -29,13 +29,17 @@ class S99IntSpec extends FlatSpec with Matchers {
     }
 
     Await.result(futureResult, 1 second) should be(true)
-
   }
 
   "isCoprimeTo" should "return true if and only if numbers are coprimes" in {
     35.isCoprimeTo(64) should be(true)
     35.isCoprimeTo(65) should be(false)
     35.isCoprimeTo(35) should be(false)
+  }
+
+  "totiend" should "calculate number of coprime numbers, lesser or equals to given number" in {
+    10.totient should be (4)
+    13.totient should be (12)
   }
 
 }

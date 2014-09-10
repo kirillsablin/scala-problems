@@ -6,6 +6,7 @@ class S99Int(val start: Int) {
 
   def isPrime:Boolean = (2 to math.sqrt(start).toInt).forall( d => start % d != 0)
   def isCoprimeTo(other: Int):Boolean = gcd(start, other)  == 1
+  def totient:Int = (1 to start - 1) count (_.isCoprimeTo(start))
 }
 
 object S99Int {
