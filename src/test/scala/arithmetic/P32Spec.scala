@@ -4,13 +4,7 @@ import org.scalatest._
 
 class P32Spec extends FlatSpec with Matchers {
 
-  def gcd(a: Int, b: Int):Int = {
-    val r = a % b
-    if (r == 0)
-      b
-    else
-      gcd(b, r)
-  }
+  import P32._
 
   "gcd" should "be one if one of arguments is one" in {
 

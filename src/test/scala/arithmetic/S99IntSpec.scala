@@ -32,4 +32,10 @@ class S99IntSpec extends FlatSpec with Matchers {
 
   }
 
+  "isCoprimeTo" should "return true if and only if numbers are coprimes" in {
+    35.isCoprimeTo(64) should be(true)
+    35.isCoprimeTo(65) should be(false)
+    35.isCoprimeTo(35) should be(false)
+  }
+
 }
