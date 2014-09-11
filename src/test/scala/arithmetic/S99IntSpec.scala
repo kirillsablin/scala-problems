@@ -80,4 +80,23 @@ class S99IntSpec extends FlatSpec with Matchers {
     13.totientImproved should be (12)
   }
 
+  it should "works faster then regular one " in {
+
+    val regularFutureResult = async {
+      10090.totient
+    }
+
+    a [java.util.concurrent.TimeoutException] should be thrownBy {
+      Await.result(regularFutureResult, 5 millis)
+    }
+
+
+    val improvedFutureResult = async {
+      10090.totientImproved
+    }
+
+    Await.result(improvedFutureResult, 5 millis) should be (4032)
+
+  }
+
 }
