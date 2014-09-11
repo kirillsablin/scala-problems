@@ -71,4 +71,8 @@ class S99IntSpec extends FlatSpec with Matchers {
     Await.result(futureResult, 1 second) should be (List(bigPrime))
   }
 
+  "primeFactorMultiplicity" should "return row encoded prime factors" in {
+    315.primeFactorMultiplicity should be (List((3,2), (5,1), (7,1)))
+  }
+
 }

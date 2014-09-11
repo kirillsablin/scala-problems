@@ -3,6 +3,7 @@ package arithmetic
 class S99Int(val start: Int) {
   import S99Int._
   import P32._
+  import lists.P10.encode
 
   def isPrime:Boolean = (2 to math.sqrt(start).toInt).forall( d => start % d != 0)
 
@@ -19,6 +20,9 @@ class S99Int(val start: Int) {
       }
       List(start)
     }
+
+  def primeFactorMultiplicity:List[(Int, Int)] =
+    encode(primeFactors) map (_.swap)
 }
 
 object S99Int {
