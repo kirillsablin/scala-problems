@@ -23,6 +23,9 @@ class S99Int(val start: Int) {
 
   def primeFactorMultiplicity:List[(Int, Int)] =
     encode(primeFactors) map (_.swap)
+
+  def totientImproved:Int =
+    (primeFactorMultiplicity map (x => (x._1 - 1) * math.pow(x._1, x._2 - 1).toInt)).product
 }
 
 object S99Int {

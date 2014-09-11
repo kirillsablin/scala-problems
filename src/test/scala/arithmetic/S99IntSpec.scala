@@ -39,7 +39,7 @@ class S99IntSpec extends FlatSpec with Matchers {
     35.isCoprimeTo(35) should be(false)
   }
 
-  "totiend" should "calculate number of coprime numbers, lesser or equals to given number" in {
+  "totient" should "calculate number of coprime numbers, lesser or equals to given number" in {
     10.totient should be (4)
     13.totient should be (12)
   }
@@ -73,6 +73,11 @@ class S99IntSpec extends FlatSpec with Matchers {
 
   "primeFactorMultiplicity" should "return row encoded prime factors" in {
     315.primeFactorMultiplicity should be (List((3,2), (5,1), (7,1)))
+  }
+
+  "totientImproved" should "calculate totient number same way as regular one" in {
+    10.totientImproved should be (4)
+    13.totientImproved should be (12)
   }
 
 }
