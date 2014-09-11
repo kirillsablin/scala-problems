@@ -10,6 +10,8 @@ class S99IntSpec extends FlatSpec with Matchers {
 
   import S99Int._
 
+  val bigPrime = 1611623773
+
   "isPrime" should "determine if number is prime" in {
     1.isPrime should be (true)
     2.isPrime should be (true)
@@ -25,7 +27,7 @@ class S99IntSpec extends FlatSpec with Matchers {
   it should "calculate fast for big prime numbers" in {
 
     val futureResult = async {
-       1611623773.isPrime
+      bigPrime.isPrime
     }
 
     Await.result(futureResult, 1 second) should be(true)
@@ -40,6 +42,33 @@ class S99IntSpec extends FlatSpec with Matchers {
   "totiend" should "calculate number of coprime numbers, lesser or equals to given number" in {
     10.totient should be (4)
     13.totient should be (12)
+  }
+
+  "primeFactors" should "return empty list for 1" in {
+    1.primeFactors should be (List())
+  }
+
+  it should "return singleton lists with given number for prime numbers" in {
+
+    for (primeNumber <- List(2, 3, 13, 29))
+      primeNumber.primeFactors should be (List(primeNumber))
+
+  }
+
+  it should "return list of prime factors if not prime number" in {
+    315.primeFactors should be (List(3, 3, 5, 7))
+    32.primeFactors should be (List(2, 2, 2, 2, 2))
+    12.primeFactors should be (List(2, 2, 3))
+    15.primeFactors should be (List(3, 5))
+    9.primeFactors should be (List(3, 3))
+  }
+
+  it should "calculates fast for big prime numbers" in {
+    val futureResult = async {
+      bigPrime.primeFactors
+    }
+
+    Await.result(futureResult, 1 second) should be (List(bigPrime))
   }
 
 }
