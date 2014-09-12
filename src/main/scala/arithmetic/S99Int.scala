@@ -5,7 +5,10 @@ class S99Int(val start: Int) {
   import P32._
   import lists.P10.encode
 
-  def isPrime:Boolean = (2 to math.sqrt(start).toInt).forall( d => start % d != 0)
+  def isPrime:Boolean = {
+    val bound = math.sqrt(start).toInt
+    (start > 1 ) && primes.takeWhile( _ <= bound).forall( start % _ != 0 )
+  }
 
   def isCoprimeTo(other: Int):Boolean = gcd(start, other)  == 1
 
@@ -26,8 +29,17 @@ class S99Int(val start: Int) {
 
   def totientImproved:Int =
     (primeFactorMultiplicity map (x => (x._1 - 1) * math.pow(x._1, x._2 - 1).toInt)).product
+
+  def goldbach:(Int, Int) = {
+    if (start < 4 || start % 2 == 1)
+      throw new IllegalArgumentException
+
+    val first = primes.dropWhile( x => !(start - x).isPrime ).head
+    (first, start - first)
+  }
 }
 
 object S99Int {
   implicit def int2S99Int(i: Int): S99Int = new S99Int(i)
+  def primes:Stream[Int] = Stream.cons(2, Stream.from(3, 2).filter( _.isPrime ))
 }

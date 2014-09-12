@@ -13,7 +13,7 @@ class S99IntSpec extends FlatSpec with Matchers {
   val bigPrime = 1611623773
 
   "isPrime" should "determine if number is prime" in {
-    1.isPrime should be (true)
+    1.isPrime should be (false)
     2.isPrime should be (true)
     3.isPrime should be (true)
     4.isPrime should be (false)
@@ -96,6 +96,26 @@ class S99IntSpec extends FlatSpec with Matchers {
     }
 
     Await.result(improvedFutureResult, 5 millis) should be (4032)
+
+  }
+
+  "goldbach" should "calculate pair of primes sum of those is given number" in {
+    28.goldbach should be(5, 23)
+    10.goldbach should be(3, 7)
+  }
+
+  it should "throw error if illigal argument" in {
+    a[IllegalArgumentException] should be thrownBy {
+      (-2).goldbach
+    }
+
+    a[IllegalArgumentException] should be thrownBy {
+      2.goldbach
+    }
+
+    a[IllegalArgumentException] should be thrownBy {
+      7.goldbach
+    }
 
   }
 
