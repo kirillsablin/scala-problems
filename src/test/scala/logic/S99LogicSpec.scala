@@ -36,6 +36,15 @@ class S99LogicSpec extends FlatSpec with Matchers {
         ((false, true), false),
         ((false, false), false)
       ))
+  }
 
+  "boolean function" should "be able to be used in infix form" in {
+    table2((a: Boolean, b: Boolean) => a and (a or notOp(b))) should
+      be (List(
+        ((true, true), true),
+        ((true, false), true),
+        ((false, true), false),
+        ((false, false), false)
+      ))
   }
 }
