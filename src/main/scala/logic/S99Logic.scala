@@ -17,4 +17,13 @@ object S99Logic {
 
   def table2(f: (Boolean, Boolean) => Boolean):List[((Boolean, Boolean), Boolean)] =
     for (a <- booleans; b <- booleans) yield ((a, b), f(a, b))
+
+  def gray(n: Int):List[String] =
+    if (n == 1)
+      List("0", "1")
+    else {
+      val prev = gray(n - 1)
+
+      prev.map("0"+ _)  ++ prev.reverse.map("1" + _)
+    }
 }

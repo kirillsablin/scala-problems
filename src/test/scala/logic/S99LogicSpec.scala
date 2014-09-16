@@ -47,4 +47,14 @@ class S99LogicSpec extends FlatSpec with Matchers {
         ((false, false), false)
       ))
   }
+
+  "gray" should "return 0,1 list for 1" in {
+    gray(1) should be (List("0", "1"))
+  }
+
+  it should "return List of previous with prepended 0 and reversed previous with prepened 1" in {
+    gray(2) should be(List("00", "01", "11", "10"))
+    gray(3) should be(List("000", "001", "011", "010", "110", "111", "101", "100"))
+  }
+
 }
