@@ -57,4 +57,10 @@ class S99LogicSpec extends FlatSpec with Matchers {
     gray(3) should be(List("000", "001", "011", "010", "110", "111", "101", "100"))
   }
 
+  "huffman" should "return codes for list with frequencies" in {
+    huffman(List(("a", 45), ("b", 13), ("c", 12), ("d", 16), ("e", 9), ("f", 5))) should
+      be(List(("a","0"), ("c","100"), ("b","101"), ("f","1100") ,("e","1101"), ("d","111")))
+  }
+
+
 }
