@@ -50,7 +50,41 @@ class TreeSpec extends FlatSpec with Matchers {
   it should "return true only if symmetric regardless of values" in {
     Node("x", End, Node("x")).isSymmetric should be(false)
     Node("x", Node("y"), Node("x")).isSymmetric should be(true)
+  }
 
+  "addNode" should "create new tree if applied to End node" in {
+    End.addValue(2) should be (Node(2))
+  }
+
+  it should "do nothing if value already inside" in {
+    Node(2).addValue(2) should be(Node(2))
+  }
+
+  it should "add to left subtree if value is lesser than current" in {
+    Node(2).addValue(1) should be(Node(2, Node(1), End))
+  }
+
+  it should "add to right subtree if value is greater than current" in {
+    Node(2).addValue(3) should be(Node(2, End, Node(3)))
+  }
+
+  "fromList" should "create new binary search tree from list of elements" in {
+    Tree.fromList(List(3, 2, 5, 7, 1)) should be (
+      Node(3,
+        Node(2,
+          Node(1),
+          End
+        ),
+        Node(5,
+          End,
+          Node(7)
+        )
+      )
+    )
+
+    Tree.fromList(List(5, 3, 18, 1, 4, 12, 21)).isSymmetric should be (true)
+
+    Tree.fromList(List(3, 2, 5, 7, 4)).isSymmetric should be (false)
   }
 
 }
