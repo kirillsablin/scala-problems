@@ -87,4 +87,31 @@ class TreeSpec extends FlatSpec with Matchers {
     Tree.fromList(List(3, 2, 5, 7, 4)).isSymmetric should be (false)
   }
 
+  "symmetricBalancedTrees" should "generate all symmetric balanced trees" in {
+    Tree.symmetricBalancedTrees(5, "x") should be (
+      List(
+        Node("x",
+          Node("x",
+            End,
+            Node("x")
+          ),
+          Node("x",
+            Node("x"),
+            End
+          )
+        ),
+        Node("x",
+          Node("x",
+            Node("x"),
+            End
+          ),
+          Node("x",
+            End,
+            Node("x")
+          )
+        )
+      )
+    )
+  }
+
 }

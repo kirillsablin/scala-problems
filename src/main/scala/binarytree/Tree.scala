@@ -38,6 +38,8 @@ object Node {
 }
 
 object Tree {
+  def symmetricBalancedTrees[T](n: Int, elem: T): List[Tree[T]] = cBalanced(n, elem).filter(_.isSymmetric)
+
   def fromList[T <% Ordered[T]](elements: List[T]):Tree[T] =
     elements.foldLeft[Tree[T]](End)((acc:Tree[T], current:T) => acc.addValue(current))
 
