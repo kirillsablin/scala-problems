@@ -38,6 +38,7 @@ object Node {
 }
 
 object Tree {
+
   def symmetricBalancedTrees[T](n: Int, elem: T): List[Tree[T]] = cBalanced(n, elem).filter(_.isSymmetric)
 
   def fromList[T <% Ordered[T]](elements: List[T]):Tree[T] =
@@ -59,4 +60,17 @@ object Tree {
     }
   }
 
+  def hbalTrees[T](n: Int, elem: T): List[Tree[T]] =
+    if (n == 0)
+      List(End)
+    else if (n == 1) {
+      List(Node(elem))
+    }
+    else {
+      val nMinusOne = hbalTrees(n-1, elem)
+      val nMinusTwo = hbalTrees(n-2, elem)
+
+      (nMinusOne flatMap (x => nMinusTwo flatMap (y => List(Node(elem, x, y), Node(elem, y, x))))) ++
+        (nMinusOne flatMap (x => nMinusOne map (y => Node(elem, x, y))))
+    }
 }

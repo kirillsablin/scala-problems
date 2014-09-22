@@ -114,4 +114,16 @@ class TreeSpec extends FlatSpec with Matchers {
     )
   }
 
+  "hbalTrees" should "return single element list if height is zero" in {
+    Tree.hbalTrees(0, "x") should be (List(End))
+  }
+
+  it should "return single element list if height is one" in {
+    Tree.hbalTrees(1, "x") should be (List(Node("x")))
+  }
+
+  it should "return tree is created from subtrees of height minus one and minus two" in {
+    Tree.hbalTrees(2, "x") should be (List(Node("x", Node("x"), End), Node("x", End, Node("x")), Node("x", Node("x"), Node("x"))))
+  }
+
 }
