@@ -126,4 +126,44 @@ class TreeSpec extends FlatSpec with Matchers {
     Tree.hbalTrees(2, "x") should be (List(Node("x", Node("x"), End), Node("x", End, Node("x")), Node("x", Node("x"), Node("x"))))
   }
 
+
+  "minHbalNodes" should "return 0 for zero height" in {
+    Tree.minHbalNodes(0) should be (0)
+  }
+
+  it should "return 1 for one height" in {
+    Tree.minHbalNodes(1) should be (1)
+  }
+
+  it should "return sum of previous two plus 1 for any other height" in {
+    Tree.minHbalNodes(2) should be (2)
+    Tree.minHbalNodes(3) should be (4)
+    Tree.minHbalNodes(4) should be (7)
+    Tree.minHbalNodes(5) should be (12)
+    Tree.minHbalNodes(15) should be(1596)
+  }
+
+  "maxHbalHeight" should "return 0 for zero elements" in {
+    Tree.maxHbalHeight(0) should be(0)
+  }
+
+  it should "return height before minHbalNodes would be greater than number of elements" in {
+    Tree.maxHbalHeight(1) should be (1)
+    Tree.maxHbalHeight(6) should be(3)
+    Tree.maxHbalHeight(7) should be(4)
+    Tree.maxHbalHeight(8) should be(4)
+  }
+
+  "hbalTreesWithNodes" should "return all height balanced trees with such amount of elements" in {
+    Tree.hbalTreesWithNodes(4, "x").length should be(4)
+    Tree.hbalTreesWithNodes(15, "x").length should be(1553)
+  }
+
+  "leafCount" should "return zero for empty tree" in {
+    End.nodeCount should be(0)
+  }
+
+  it should "return sum of leafCount for subnodes plus one for node" in {
+    Node("x", Node("x"), Node("x", Node("x"), End)).nodeCount should be(4)
+  }
 }
