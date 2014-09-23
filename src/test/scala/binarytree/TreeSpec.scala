@@ -159,11 +159,19 @@ class TreeSpec extends FlatSpec with Matchers {
     Tree.hbalTreesWithNodes(15, "x").length should be(1553)
   }
 
-  "leafCount" should "return zero for empty tree" in {
+  "nodeCount" should "return zero for empty tree" in {
     End.nodeCount should be(0)
   }
 
   it should "return sum of leafCount for subnodes plus one for node" in {
     Node("x", Node("x"), Node("x", Node("x"), End)).nodeCount should be(4)
+  }
+
+  "leafCount" should "count only non-empty nodes without subtrees" in {
+    Node('x', Node('x'), End).leafCount should be(1)
+  }
+
+  "leafList" should "collect leafs" in {
+    Node('a', Node('b'), Node('c', Node('d'), Node('e'))).leafList should be (List('b', 'd', 'e'))
   }
 }

@@ -5,8 +5,12 @@ sealed abstract class Tree[+T] {
   def isMirrorOf[V](other:Tree[V]):Boolean
   def addValue[U >: T <% Ordered[U]](x: U): Tree[U]
   def nodeCount:Int
+  def leafCount:Int = leafList.length
+  def leafList:List[T]
 }
 case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
+
+
   override def isMirrorOf[V](other: Tree[V]): Boolean = other match {
     case End => false
     case Node(_, l, r) => left.isMirrorOf(r) && right.isMirrorOf(l)
@@ -25,6 +29,10 @@ case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
       this
 
   override def nodeCount: Int = left.nodeCount + right.nodeCount + 1
+
+  private[this] def isLeaf = left == End && right == End
+
+  override def leafList: List[T] = if (isLeaf) List(value) else left.leafList ++ right.leafList
 }
 case object End extends Tree[Nothing] {
 
@@ -37,6 +45,8 @@ case object End extends Tree[Nothing] {
   override def addValue[U >: Nothing <% Ordered[U]](x: U): Tree[U] = Node(x)
 
   override def nodeCount: Int = 0
+
+  override def leafList: List[Nothing] = List()
 }
 object Node {
   def apply[T](value: T): Node[T] = Node(value, End, End)
