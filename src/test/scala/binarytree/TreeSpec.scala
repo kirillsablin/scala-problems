@@ -174,4 +174,27 @@ class TreeSpec extends FlatSpec with Matchers {
   "leafList" should "collect leafs" in {
     Node('a', Node('b'), Node('c', Node('d'), Node('e'))).leafList should be (List('b', 'd', 'e'))
   }
+
+  "internalList" should "collect nodes with one or two non emtpy children" in {
+    End.internalList should be (List())
+    Node('a', Node('b'), Node('c', Node('d'), Node('e'))).internalList should be(List('a', 'c'))
+  }
+
+  "atLevel" should "return empty list if there is no level" in {
+    End.atLevel(0) should be(List())
+    End.atLevel(1) should be(List())
+  }
+
+  it should "return empty list if level is bigger than height of tree" in {
+    Node("x").atLevel(2) should be(List())
+    Node("x", Node("y"), End).atLevel(3) should be(List())
+  }
+
+  it should "return value of root node at level one" in {
+    Node("x", Node("y"), End).atLevel(1) should be(List("x"))
+  }
+
+  it should "return list of values on given level" in {
+    Node('a', Node('b'), Node('c', Node('d'), Node('e'))).atLevel(2) should be(List('b', 'c'))
+  }
 }

@@ -1,15 +1,25 @@
 package binarytree
 
 sealed abstract class Tree[+T] {
+
   def isSymmetric:Boolean
+
   def isMirrorOf[V](other:Tree[V]):Boolean
+
   def addValue[U >: T <% Ordered[U]](x: U): Tree[U]
+
   def nodeCount:Int
+
   def leafCount:Int = leafList.length
+
   def leafList:List[T]
+
+  def internalList:List[T]
+
+  def atLevel(level: Int):List[T]
+
 }
 case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
-
 
   override def isMirrorOf[V](other: Tree[V]): Boolean = other match {
     case End => false
@@ -33,6 +43,15 @@ case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
   private[this] def isLeaf = left == End && right == End
 
   override def leafList: List[T] = if (isLeaf) List(value) else left.leafList ++ right.leafList
+
+  override def internalList: List[T] = if (isLeaf) List() else value :: (right.internalList ::: left.internalList)
+
+  override def atLevel(level: Int): List[T] = level match {
+    case _ if level < 1 => List()
+    case 1 => List(value)
+    case _ => left.atLevel(level - 1) ::: right.atLevel(level - 1)
+  }
+
 }
 case object End extends Tree[Nothing] {
 
@@ -47,13 +66,19 @@ case object End extends Tree[Nothing] {
   override def nodeCount: Int = 0
 
   override def leafList: List[Nothing] = List()
+
+  override def internalList: List[Nothing] = List()
+
+  override def atLevel(level: Int): List[Nothing] = List()
+
 }
 object Node {
+
   def apply[T](value: T): Node[T] = Node(value, End, End)
+
 }
 
 object Tree {
-
 
   def symmetricBalancedTrees[T](n: Int, elem: T): List[Tree[T]] = cBalanced(n, elem).filter(_.isSymmetric)
 
