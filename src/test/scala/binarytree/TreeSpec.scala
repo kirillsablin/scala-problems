@@ -197,4 +197,24 @@ class TreeSpec extends FlatSpec with Matchers {
   it should "return list of values on given level" in {
     Node('a', Node('b'), Node('c', Node('d'), Node('e'))).atLevel(2) should be(List('b', 'c'))
   }
+
+  "completeBinaryTree" should "create empty tree for zero n" in {
+     Tree.completeBinaryTree(0, "x") should be (End)
+  }
+
+  it should "create one element tree for one" in {
+    Tree.completeBinaryTree(1, "x") should be(Node("x"))
+  }
+
+  it should "create complete binary tree" in {
+    Tree.completeBinaryTree(2, "x") should be(Node("x", Node("x"), End))
+    Tree.completeBinaryTree(3, "x") should be(Node("x", Node("x"), Node("x")))
+    Tree.completeBinaryTree(6, "x") should be(Node("x", Node("x", Node("x"), Node("x")), Node("x", Node("x"), End)))
+  }
+
+
+
+
+
+
 }

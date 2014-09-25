@@ -79,6 +79,13 @@ object Node {
 }
 
 object Tree {
+  def completeBinaryTree[T](n: Int, elem: T):Tree[T] = {
+    def subtreeForNumber(number:Int):Tree[T] =
+      if (number > n) End else Node(elem, subtreeForNumber(number*2), subtreeForNumber(number*2+1))
+
+    subtreeForNumber(1)
+  }
+
 
   def symmetricBalancedTrees[T](n: Int, elem: T): List[Tree[T]] = cBalanced(n, elem).filter(_.isSymmetric)
 
