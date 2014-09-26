@@ -20,6 +20,19 @@ sealed abstract class Tree[+T] {
 
 }
 case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
+  def layoutBinaryTree: PositionedNode[T] = {
+    def recursiveMakeLayout(node:Tree[T], level:Int, before:Int):PositionedNode[T] = node match {
+      case Node(currentValue, currentLeft, currentRight) =>
+        val positionedLeft = if (currentLeft != End) recursiveMakeLayout(currentLeft, level + 1, before) else End
+        val leftCount = positionedLeft.nodeCount
+        val positionedRight = if (currentRight != End) recursiveMakeLayout(currentRight, level + 1, before + leftCount + 1) else End
+
+        new PositionedNode(currentValue, positionedLeft, positionedRight, before + 1 + leftCount, level)
+    }
+
+    recursiveMakeLayout(this, 1, 0)
+  }
+
 
   override def isMirrorOf[V](other: Tree[V]): Boolean = other match {
     case End => false
@@ -72,11 +85,18 @@ case object End extends Tree[Nothing] {
   override def atLevel(level: Int): List[Nothing] = List()
 
 }
+
+class PositionedNode[+T](override val value: T, override val left: Tree[T], override val right: Tree[T], val x: Int, val y: Int) extends Node[T](value, left, right) {
+  override def toString = "T[" + x.toString + "," + y.toString + "](" + value.toString + " " + left.toString + " " + right.toString + ")"
+}
+
 object Node {
 
   def apply[T](value: T): Node[T] = Node(value, End, End)
 
 }
+
+
 
 object Tree {
   def completeBinaryTree[T](n: Int, elem: T):Tree[T] = {

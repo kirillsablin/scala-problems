@@ -212,9 +212,10 @@ class TreeSpec extends FlatSpec with Matchers {
     Tree.completeBinaryTree(6, "x") should be(Node("x", Node("x", Node("x"), Node("x")), Node("x", Node("x"), End)))
   }
 
-
-
-
-
+  "layoutBinaryTree" should "convert Node to PositionedNode" in {
+    Node('a', Node('b', End, Node('c')), Node('d')).layoutBinaryTree.toString should be(
+       "T[3,1](a T[1,2](b . T[2,3](c . .)) T[4,2](d . .))"
+    )
+  }
 
 }
