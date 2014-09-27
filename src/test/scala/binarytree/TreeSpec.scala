@@ -218,4 +218,16 @@ class TreeSpec extends FlatSpec with Matchers {
     )
   }
 
+  "layoutBinaryTree2" should "convert Node tp PositionedNode with constant width on each level" in {
+    Node('a', Node('b', End, Node('c')), Node('d')).layoutBinaryTree2.toString should be(
+      "T[3,1](a T[1,2](b . T[2,3](c . .)) T[5,2](d . .))"
+    )
+  }
+
+  "height" should "return height of tree" in {
+    End.height should be(0)
+    Node("X").height should be(1)
+    Node("x", End, Node("x", Node("x"), End)).height should be(3)
+  }
+
 }

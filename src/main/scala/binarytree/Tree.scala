@@ -18,8 +18,11 @@ sealed abstract class Tree[+T] {
 
   def atLevel(level: Int):List[T]
 
+  val height:Int
+
 }
 case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
+
   def layoutBinaryTree: PositionedNode[T] = {
     def recursiveMakeLayout(node:Tree[T], level:Int, before:Int):PositionedNode[T] = node match {
       case Node(currentValue, currentLeft, currentRight) =>
@@ -33,6 +36,17 @@ case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
     recursiveMakeLayout(this, 1, 0)
   }
 
+  def layoutBinaryTree2: PositionedNode[T] = {
+    def pow2(i:Int):Int = (1 to i).foldLeft(1)((acc,_) => acc*2)
+    def constructLayout(current:Tree[T], absoluteHeight:Int, offset:Int, level:Int):PositionedNode[T] = current match {
+      case node:Node[T] =>
+        val newLeft = if (node.left != End) constructLayout(node.left, absoluteHeight - 1, offset, level + 1) else End
+        val newRight = if (node.right != End) constructLayout(node.right, absoluteHeight - 1, offset + pow2(absoluteHeight - 1), level + 1) else End
+        new PositionedNode[T](node.value, newLeft, newRight, offset - 2 + pow2(absoluteHeight - 1), level)
+    }
+
+    constructLayout(this, height, 1, 1)
+  }
 
   override def isMirrorOf[V](other: Tree[V]): Boolean = other match {
     case End => false
@@ -65,6 +79,7 @@ case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
     case _ => left.atLevel(level - 1) ::: right.atLevel(level - 1)
   }
 
+  lazy val height: Int = math.max(left.height, right.height) + 1
 }
 case object End extends Tree[Nothing] {
 
@@ -84,6 +99,7 @@ case object End extends Tree[Nothing] {
 
   override def atLevel(level: Int): List[Nothing] = List()
 
+  override val height:Int = 0
 }
 
 class PositionedNode[+T](override val value: T, override val left: Tree[T], override val right: Tree[T], val x: Int, val y: Int) extends Node[T](value, left, right) {
