@@ -20,6 +20,8 @@ sealed abstract class Tree[+T] {
 
   val height:Int
 
+  def toStringEx:String
+
 }
 case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
 
@@ -80,6 +82,12 @@ case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
   }
 
   lazy val height: Int = math.max(left.height, right.height) + 1
+
+  override def toStringEx:String =
+    if (isLeaf)
+      value.toString
+    else
+      value.toString + "(" + left.toStringEx + "," + right.toStringEx + ")"
 }
 case object End extends Tree[Nothing] {
 
@@ -100,6 +108,8 @@ case object End extends Tree[Nothing] {
   override def atLevel(level: Int): List[Nothing] = List()
 
   override val height:Int = 0
+
+  override def toStringEx: String = ""
 }
 
 class PositionedNode[+T](override val value: T, override val left: Tree[T], override val right: Tree[T], val x: Int, val y: Int) extends Node[T](value, left, right) {
@@ -115,6 +125,33 @@ object Node {
 
 
 object Tree {
+  def fromString(repr: String):Tree[Char] = {
+    def parse(lst:List[Char]):(Tree[Char],List[Char]) = lst match {
+      case symbol::'('::rst if symbol.isLetter =>
+        val (left, r1) = parse(rst) match {
+          case (l, ','::rst1) => (l, rst1)
+          case (l, rst1) => (l, rst1)
+        }
+        val (right, ')'::r2) = parse(r1)
+        (Node(symbol, left, right), r2)
+
+      case symbol::rst if symbol.isLetter => (Node(symbol), rst)
+      case ','::rst if rst.nonEmpty => (End, rst)
+      case Nil => (End, Nil)
+    }
+
+    try {
+      val (result, rest) = parse(repr.toList)
+      if (rest.nonEmpty) {
+        throw new IllegalArgumentException
+      }
+      result
+    }
+    catch {
+      case e:MatchError => throw new IllegalArgumentException(e.getMessage())
+    }
+  }
+
   def completeBinaryTree[T](n: Int, elem: T):Tree[T] = {
     def subtreeForNumber(number:Int):Tree[T] =
       if (number > n) End else Node(elem, subtreeForNumber(number*2), subtreeForNumber(number*2+1))

@@ -230,4 +230,48 @@ class TreeSpec extends FlatSpec with Matchers {
     Node("x", End, Node("x", Node("x"), End)).height should be(3)
   }
 
+  "toStringEx" should "generated empty string for End node" in {
+    End.toStringEx should be("")
+  }
+
+  it should "return value for node without children" in {
+    Node("x").toStringEx should be("x")
+  }
+
+  it should "return functional style for complex tree" in {
+    Node('a', Node('b', Node('d'), Node('e')), Node('c', End, Node('f', Node('g'), End))).toStringEx should be(
+     "a(b(d,e),c(,f(g,)))"
+    )
+  }
+
+  "fromString" should "return End node on empty string" in {
+    Tree.fromString("") should be(End)
+  }
+
+  it should "return single node if only one symbol passed" in {
+    Tree.fromString("a") should be(Node('a'))
+  }
+
+  it should "throw exception on invalid input" in {
+    a[IllegalArgumentException] should be thrownBy {
+      Tree.fromString("aa")
+    }
+
+    a[IllegalArgumentException] should be thrownBy {
+      Tree.fromString("a(")
+    }
+
+    a[IllegalArgumentException] should be thrownBy {
+      Tree.fromString("a)")
+    }
+
+    a[IllegalArgumentException] should be thrownBy {
+      Tree.fromString(",")
+    }
+  }
+
+  it should "parse back strings produced be toStringEx" in {
+    val tree = Node('a', Node('b'), Node('c', End, Node('d')))
+    Tree.fromString(tree.toStringEx) should be(tree)
+  }
 }
