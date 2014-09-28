@@ -273,5 +273,34 @@ class TreeSpec extends FlatSpec with Matchers {
   it should "parse back strings produced be toStringEx" in {
     val tree = Node('a', Node('b'), Node('c', End, Node('d')))
     Tree.fromString(tree.toStringEx) should be(tree)
+
+    val anotherTree = Node('a', Node('b', Node('d'), Node('e')), Node('c', End, Node('f', Node('g'), End)))
+    Tree.fromString(anotherTree.toStringEx) should be (anotherTree)
+  }
+
+  "preorder" should "convert tree to sequence with node element comes before subnodes" in {
+    End.preorder should be(List())
+
+    Node("a", Node("b"), Node("c", End, Node("d"))).preorder should be (List("a", "b", "c", "d"))
+
+    Tree.fromString("a(b(d,e),c(,f(g,)))").preorder should be(List('a', 'b', 'd', 'e', 'c', 'f', 'g'))
+  }
+
+  "inorder" should "convert tree to sequence with node element between left and right subnodes" in {
+    End.inorder should be(List())
+
+    Node("a", Node("b"), Node("c", End, Node("d"))).inorder should be (List("b", "a", "c", "d"))
+
+    Tree.fromString("a(b(d,e),c(,f(g,)))").inorder should be (List('d', 'b', 'e', 'a', 'c', 'g', 'f'))
+  }
+
+  "preInTree" should "return End if both pre and in are empty lists" in {
+    Tree.preInTree(List(), List()) should be (End)
+  }
+
+  it should "return constructed tree if lists are same size and consist of same elements" in {
+    Tree.preInTree(List('a', 'b', 'd', 'e', 'c', 'f', 'g'), List('d', 'b', 'e', 'a', 'c', 'g', 'f')).toStringEx should be(
+      "a(b(d,e),c(,f(g,)))"
+    )
   }
 }

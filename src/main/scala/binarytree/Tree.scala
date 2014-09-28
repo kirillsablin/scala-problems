@@ -22,6 +22,9 @@ sealed abstract class Tree[+T] {
 
   def toStringEx:String
 
+  def preorder:List[T]
+
+  def inorder:List[T]
 }
 case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
 
@@ -88,8 +91,13 @@ case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
       value.toString
     else
       value.toString + "(" + left.toStringEx + "," + right.toStringEx + ")"
+
+  override def preorder: List[T] = value :: left.preorder ::: right.preorder
+
+  override def inorder: List[T] = left.inorder ::: value :: right.inorder
 }
 case object End extends Tree[Nothing] {
+
 
   override def isMirrorOf[V](other: Tree[V]): Boolean = other == End
 
@@ -110,6 +118,10 @@ case object End extends Tree[Nothing] {
   override val height:Int = 0
 
   override def toStringEx: String = ""
+
+  override def preorder: List[Nothing] = List()
+
+  override def inorder: List[Nothing] = List()
 }
 
 class PositionedNode[+T](override val value: T, override val left: Tree[T], override val right: Tree[T], val x: Int, val y: Int) extends Node[T](value, left, right) {
@@ -125,18 +137,33 @@ object Node {
 
 
 object Tree {
-  def fromString(repr: String):Tree[Char] = {
-    def parse(lst:List[Char]):(Tree[Char],List[Char]) = lst match {
-      case symbol::'('::rst if symbol.isLetter =>
-        val (left, r1) = parse(rst) match {
-          case (l, ','::rst1) => (l, rst1)
-          case (l, rst1) => (l, rst1)
-        }
-        val (right, ')'::r2) = parse(r1)
-        (Node(symbol, left, right), r2)
+  def preInTree[T](pre: List[T], in: List[T]):Tree[T] = (pre, in) match {
+    case (value::restPre, _) =>
+      val leftInElems = in.takeWhile(_ != value)
+      val rightInElems = in.dropWhile( _ != value).tail
+      Node(value, preInTree(restPre.take(leftInElems.length), leftInElems), preInTree(restPre drop leftInElems.length, rightInElems))
 
-      case symbol::rst if symbol.isLetter => (Node(symbol), rst)
-      case ','::rst if rst.nonEmpty => (End, rst)
+    case (List(), List()) => End
+  }
+
+  def fromString(repr: String):Tree[Char] = {
+    def parseChildren(lst:List[Char]):(Tree[Char], Tree[Char], List[Char]) = {
+      val (left, afterLeft) = parse(lst) match {
+        case (elem, ','::')'::afterChildren) => (elem, ','::')'::afterChildren)
+        case (elem, ','::afterComma) => (elem, afterComma)
+        case (elem, afterElem) => (elem, afterElem)
+      }
+      val (right, ')'::afterNode) = parse(afterLeft)
+
+      (left, right, afterNode)
+    }
+    def parse(lst:List[Char]):(Tree[Char],List[Char]) = lst match {
+      case symbol::'('::rest if symbol.isLetter =>
+        val (left, right, afterNode) = parseChildren(rest)
+        (Node(symbol, left, right), afterNode)
+
+      case symbol::rest if symbol.isLetter => (Node(symbol), rest)
+      case ','::rest if rest.nonEmpty => (End, rest)
       case Nil => (End, Nil)
     }
 
