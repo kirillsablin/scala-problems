@@ -303,4 +303,17 @@ class TreeSpec extends FlatSpec with Matchers {
       "a(b(d,e),c(,f(g,)))"
     )
   }
+
+  "toDotString" should "convert char tree to preorder representation with dots as empty nodes" in {
+    End.toDotstring should be (".")
+    Tree.fromString("a(b(d,e),c(,f(g,)))").toDotstring should be ("abd..e..c.fg...")
+  }
+
+  "fromDotstring" should "restore End node from one dot" in {
+    Tree.fromDotstring(".") should be (End)
+  }
+
+  it should "restore tree from dotstring representation" in {
+    Tree.fromDotstring("abd..e..c.fg...").toStringEx should be ("a(b(d,e),c(,f(g,)))")
+  }
 }

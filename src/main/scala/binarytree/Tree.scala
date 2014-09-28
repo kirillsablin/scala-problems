@@ -25,6 +25,9 @@ sealed abstract class Tree[+T] {
   def preorder:List[T]
 
   def inorder:List[T]
+
+  def toDotstring:String
+
 }
 case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
 
@@ -95,9 +98,10 @@ case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
   override def preorder: List[T] = value :: left.preorder ::: right.preorder
 
   override def inorder: List[T] = left.inorder ::: value :: right.inorder
+
+  override def toDotstring: String = value + left.toDotstring + right.toDotstring
 }
 case object End extends Tree[Nothing] {
-
 
   override def isMirrorOf[V](other: Tree[V]): Boolean = other == End
 
@@ -122,6 +126,8 @@ case object End extends Tree[Nothing] {
   override def preorder: List[Nothing] = List()
 
   override def inorder: List[Nothing] = List()
+
+  override def toDotstring: String = "."
 }
 
 class PositionedNode[+T](override val value: T, override val left: Tree[T], override val right: Tree[T], val x: Int, val y: Int) extends Node[T](value, left, right) {
@@ -137,6 +143,19 @@ object Node {
 
 
 object Tree {
+  def fromDotstring(s: String):Tree[Char] = {
+    def parse(lst:List[Char]):(Tree[Char],List[Char]) = lst match {
+      case '.' :: rest => (End, rest)
+      case a :: rest if a.isLetter =>
+        val (left, restAfterLeftChild) = parse(rest)
+        val (right, restAfterRightChild) = parse(restAfterLeftChild)
+        (Node(a, left, right), restAfterRightChild)
+    }
+
+    val (result, List()) = parse(s.toList)
+    result
+  }
+
   def preInTree[T](pre: List[T], in: List[T]):Tree[T] = (pre, in) match {
     case (value::restPre, _) =>
       val leftInElems = in.takeWhile(_ != value)
