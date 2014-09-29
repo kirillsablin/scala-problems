@@ -23,4 +23,10 @@ class MTreeSpec extends FlatSpec with Matchers {
     mtree.toString should be ("afg^^c^bd^e^^^")
   }
 
+  "internalPath" should "return sum of lengths of all paths from root to each node" in {
+    import MTree.fromString
+
+    "afg^^c^bd^e^^^".internalPathLength should be (9)
+  }
+
 }

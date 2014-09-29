@@ -5,6 +5,9 @@ case class MTree[+T](value: T, children: List[MTree[T]]) {
 
   def this(value: T) = this(value, List())
   override def toString = value + children.foldLeft("")(_ + _) + "^"
+
+  def internalPathLengthWithStart(start:Int):Int = start + children.map( _.internalPathLengthWithStart(start + 1)).sum
+  def internalPathLength:Int = internalPathLengthWithStart(0)
 }
 
 object MTree {
