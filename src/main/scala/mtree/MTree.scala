@@ -1,6 +1,8 @@
 package mtree
 
 case class MTree[+T](value: T, children: List[MTree[T]]) {
+  def postorder:List[T] = children.flatMap( _.postorder) ::: List(value)
+
   def nodeCount:Int = children.foldLeft(1)( _ + _.nodeCount )
 
   def this(value: T) = this(value, List())
