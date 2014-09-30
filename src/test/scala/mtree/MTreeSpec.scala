@@ -37,4 +37,21 @@ class MTreeSpec extends FlatSpec with Matchers {
     "afg^^c^bd^e^^^".postorder should be(List('g', 'f', 'c', 'd', 'e', 'b', 'a'))
   }
 
+  "lispyTree" should "return one element string if only one node without children" in {
+    MTree("x").lispyTree should be("x")
+  }
+
+  it should "return root element as first element of list and children as consequential" in {
+    MTree("x", List(MTree("y"), MTree("z"))).lispyTree should be ("(x y z)")
+    MTree("a", List(MTree("b", List(MTree("c"))))).lispyTree should be("(a (b c))")
+  }
+
+  "fromLispy" should "return one element MTree if one element string passed" in {
+    MTree.fromLispy("abc") should be(MTree("abc"))
+  }
+
+  it should "convert sublists into nodes with children" in {
+    MTree.fromLispy("(aa bc)") should be (MTree("aa", List(MTree("bc"))))
+  }
+
 }
