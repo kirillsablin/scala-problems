@@ -18,8 +18,8 @@ abstract class GraphBase[T, U] {
   def edgeTarget(e: Edge, n: Node): Option[Node]
 
   override def equals(o: Any) = o match {
-    case g: GraphBase[_,_] => (nodes.keys.toList -- g.nodes.keys.toList == Nil &&
-      edges.map(_.toTuple) -- g.edges.map(_.toTuple) == Nil)
+    case g: GraphBase[_,_] => nodes.keys.toList.diff(g.nodes.keys.toList) == Nil &&
+      edges.map(_.toTuple).diff(g.edges.map(_.toTuple)) == Nil
     case _ => false
   }
   def addNode(value: T) = {
@@ -27,4 +27,17 @@ abstract class GraphBase[T, U] {
     nodes = Map(value -> n) ++ nodes
     n
   }
+
+  def toTermForm:(List[T], List[(T, T, U)]) = (nodes.keys.toList.reverse,
+    edges.map ( e => (e.n1.value, e.n2.value, e.value)).reverse)
+
+  def toAdjacentForm:List[(T, List[(T, U)])] =
+    nodes.toList.map ( n => (n._1, n._2.adj.map( e => (edgeTarget(e, n._2).get.value, e.value)) ))
+
+  override def toString: String = nodes.values.map (n => if (n.adj.isEmpty) n.value.toString else {
+    n.adj.filter ( _.n1 == n) map ( e => n.value.toString + edgeSeparator + e.n2.value.toString +
+      (if (e.value.isInstanceOf[Unit]) "" else "/" + e.value.toString)) mkString ", "
+  }) filter (_.length > 0) mkString("[", ", ", "]")
+
+  def edgeSeparator:String
 }

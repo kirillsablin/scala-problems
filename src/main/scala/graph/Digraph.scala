@@ -1,6 +1,7 @@
 package graph
 
 class Digraph[T, U] extends GraphBase[T, U] {
+
   override def equals(o: Any) = o match {
     case g: Digraph[_,_] => super.equals(g)
     case _ => false
@@ -15,9 +16,12 @@ class Digraph[T, U] extends GraphBase[T, U] {
     edges = e :: edges
     nodes(source).adj = e :: nodes(source).adj
   }
+
+  def edgeSeparator:String = Digraph.edgeSeparator
 }
 
 object Digraph extends GraphObjBase {
+
   type GraphClass[T, U] = Digraph[T, U]
 
   def termLabel[T, U](nodes: List[T], edges: List[(T,T,U)]) = {
@@ -32,4 +36,7 @@ object Digraph extends GraphObjBase {
     for ((s, a) <- nodes; (d, l) <- a) g.addArc(s, d, l)
     g
   }
+
+  override def edgeSeparator: String = ">"
+
 }

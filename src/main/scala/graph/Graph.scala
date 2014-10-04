@@ -17,9 +17,12 @@ class Graph[T, U] extends GraphBase[T, U] {
     nodes(n1).adj = e :: nodes(n1).adj
     nodes(n2).adj = e :: nodes(n2).adj
   }
+
+  override def edgeSeparator: String = Graph.edgeSeparator
 }
 
 object Graph extends GraphObjBase {
+
   type GraphClass[T, U] = Graph[T, U]
 
   def termLabel[T, U](nodes: List[T], edges: List[(T,T,U)]) = {
@@ -37,4 +40,6 @@ object Graph extends GraphObjBase {
     }
     g
   }
+
+  override def edgeSeparator: String = "-"
 }
