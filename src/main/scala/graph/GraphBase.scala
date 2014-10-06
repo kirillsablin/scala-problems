@@ -40,4 +40,17 @@ abstract class GraphBase[T, U] {
   }) filter (_.length > 0) mkString("[", ", ", "]")
 
   def edgeSeparator:String
+
+  def findPaths(start: T, end: T):List[List[T]] = {
+    def findR(current:List[T], soFar:List[List[T]]):List[List[T]] = {
+      val soFarWithCurrent = if (current.head == end) current.reverse ::soFar else soFar
+
+      nodes(current.head).neighbors.filter( v => !current.contains(v.value) ).foldLeft(soFarWithCurrent)(
+        (soFarWithOther, node) => findR(node.value::current, soFarWithOther)
+      )
+    }
+
+    findR(List(start), List())
+  }
+
 }
