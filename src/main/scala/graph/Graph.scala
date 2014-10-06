@@ -1,6 +1,7 @@
 package graph
 
 class Graph[T, U] extends GraphBase[T, U] {
+
   override def equals(o: Any) = o match {
     case g: Graph[_,_] => super.equals(g)
     case _ => false

@@ -53,4 +53,9 @@ abstract class GraphBase[T, U] {
     findR(List(start), List())
   }
 
+  def findCycles(start: T):List[List[T]] =
+    nodes(start).neighbors flatMap( (next) => findPaths(next.value, start)) filter( _.length > 2) map (start::_)
+
+
+
 }

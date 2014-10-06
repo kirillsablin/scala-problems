@@ -40,4 +40,10 @@ class GraphSpec extends FlatSpec with Matchers {
 
   }
 
+  "findCycles" should "find all cycles" in {
+    Graph.fromString("[b-c, f-c, g-h, d, f-b, k-f, h-g]").findCycles("f") should contain theSameElementsAs
+      List(List("f", "c", "b", "f"), List("f", "b", "c", "f"))
+
+  }
+
 }
