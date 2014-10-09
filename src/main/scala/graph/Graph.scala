@@ -2,6 +2,31 @@ package graph
 
 class Graph[T, U] extends GraphBase[T, U] {
 
+  def minimalSpanningTree(implicit ev:Ordering[U]):Graph[T, U] = {
+    def edgesToRestOfGraph(nodes:Set[T]): List[Edge] =
+        nodes.toList.flatMap( n => this.nodes(n).adj).filter( e => ! (nodes.contains(e.n1.value) && nodes.contains(e.n2.value)))
+
+    def calculateResult(nodes: Set[T], edges: List[Edge]):Graph[T, U] =
+      if (nodes.size == this.nodes.size) {
+        Graph.termLabel(nodes.toList, edges.map(_.toTuple))
+      } else {
+        val newEdge = edgesToRestOfGraph(nodes).min (new Ordering[Edge] {
+          override def compare(x: Edge, y: Edge): Int = ev.compare(x.value, y.value)
+        })
+        calculateResult(nodes + newEdge.n1.value + newEdge.n2.value, newEdge :: edges)
+      }
+
+    calculateResult(Set(nodes.head._1), List())
+  }
+
+  def spanningTrees:List[Graph[T, U]] = {
+    type SameGraph = Graph[T, U]
+    def spanningTreesR(left:SameGraph, right:SameGraph):List[SameGraph] = ???
+
+//    spanningTreesR(Graph.term(List(nodes.head.)))
+    spanningTreesR(this, this)
+  }
+
   override def equals(o: Any) = o match {
     case g: Graph[_,_] => super.equals(g)
     case _ => false
