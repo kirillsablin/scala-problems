@@ -22,6 +22,10 @@ abstract class GraphBase[T, U] {
       edges.map(_.toTuple).diff(g.edges.map(_.toTuple)) == Nil
     case _ => false
   }
+
+  override def hashCode(): Int = nodes.keys.foldLeft(0)( (acc, elem) => acc + elem.hashCode()) +
+    edges.map(_.hashCode()).sum
+
   def addNode(value: T) = {
     val n = new Node(value)
     nodes = Map(value -> n) ++ nodes

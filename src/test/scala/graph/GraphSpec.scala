@@ -43,21 +43,17 @@ class GraphSpec extends FlatSpec with Matchers {
   "findCycles" should "find all cycles" in {
     Graph.fromString("[b-c, f-c, g-h, d, f-b, k-f, h-g]").findCycles("f") should contain theSameElementsAs
       List(List("f", "c", "b", "f"), List("f", "b", "c", "f"))
-
   }
 
-//  "spanningTrees" should "return list of all spanning trees" in {
-//    Graph.fromString("[a-b, b-c, a-c]").spanningTrees should contain theSameElementsAs
-//      List(Graph.fromString("[a-b, b-c]"),Graph.fromString("[a-c, b-c]"),Graph.fromString("[a-b, a-c]") )
-//
-//  }
+  "spanningTrees" should "return list of all spanning trees" in {
+    Graph.fromString("[a-b, b-c, a-c]").spanningTrees should contain theSameElementsAs
+      List(Graph.fromString("[a-b, b-c]"),Graph.fromString("[a-c, b-c]"),Graph.fromString("[a-b, a-c]") )
+  }
 
   "minimalSpanningTree" should "return graph which contains all nodes and subset of edges with minimal sum length" in {
     Graph.fromStringLabel("[a-b/1, b-c/2, a-c/3]").minimalSpanningTree should be(
       Graph.fromStringLabel("[a-b/1, b-c/2]")
     )
-
   }
-
 
 }

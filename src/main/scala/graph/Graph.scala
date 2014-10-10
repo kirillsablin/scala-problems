@@ -2,9 +2,10 @@ package graph
 
 class Graph[T, U] extends GraphBase[T, U] {
 
+  def edgesToRestOfGraph(nodes:Set[T]): List[Edge] =
+      nodes.toList.flatMap( n => this.nodes(n).adj).filter( e => ! (nodes.contains(e.n1.value) == nodes.contains(e.n2.value)))
+
   def minimalSpanningTree(implicit ev:Ordering[U]):Graph[T, U] = {
-    def edgesToRestOfGraph(nodes:Set[T]): List[Edge] =
-        nodes.toList.flatMap( n => this.nodes(n).adj).filter( e => ! (nodes.contains(e.n1.value) && nodes.contains(e.n2.value)))
 
     def calculateResult(nodes: Set[T], edges: List[Edge]):Graph[T, U] =
       if (nodes.size == this.nodes.size) {
@@ -20,11 +21,15 @@ class Graph[T, U] extends GraphBase[T, U] {
   }
 
   def spanningTrees:List[Graph[T, U]] = {
-    type SameGraph = Graph[T, U]
-    def spanningTreesR(left:SameGraph, right:SameGraph):List[SameGraph] = ???
+    def spanningTreesR(nodes:Set[T], edges:List[Edge]):List[Graph[T, U]] =
+    if (nodes.size == this.nodes.size)
+      List(Graph.termLabel(nodes.toList, edges.map(_.toTuple)))
+    else {
+      edgesToRestOfGraph(nodes).flatMap(e => spanningTreesR(nodes + e.n1.value + e.n2.value, e::edges))
+    }
 
-//    spanningTreesR(Graph.term(List(nodes.head.)))
-    spanningTreesR(this, this)
+    spanningTreesR(Set(nodes.head._1), List()).distinct.foreach(a => println(a.hashCode()))
+    spanningTreesR(Set(nodes.head._1), List()).distinct
   }
 
   override def equals(o: Any) = o match {
