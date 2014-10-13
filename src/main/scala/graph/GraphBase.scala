@@ -1,6 +1,6 @@
 package graph
 
-abstract class GraphBase[T, U] {
+abstract class GraphBase[T, U, +Repr] {
   case class Edge(n1: Node, n2: Node, value: U) {
     def toTuple = (n1.value, n2.value, value)
   }
@@ -18,7 +18,7 @@ abstract class GraphBase[T, U] {
   def edgeTarget(e: Edge, n: Node): Option[Node]
 
   override def equals(o: Any) = o match {
-    case g: GraphBase[_,_] => nodes.keys.toList.diff(g.nodes.keys.toList) == Nil &&
+    case g: GraphBase[_,_,_] => nodes.keys.toList.diff(g.nodes.keys.toList) == Nil &&
       edges.map(_.toTuple).diff(g.edges.map(_.toTuple)) == Nil
     case _ => false
   }
@@ -59,6 +59,7 @@ abstract class GraphBase[T, U] {
 
   def findCycles(start: T):List[List[T]] =
     nodes(start).neighbors flatMap( (next) => findPaths(next.value, start)) filter( _.length > 2) map (start::_)
+
 
 
 

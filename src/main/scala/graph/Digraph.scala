@@ -1,6 +1,6 @@
 package graph
 
-class Digraph[T, U] extends GraphBase[T, U] {
+class Digraph[T, U] extends GraphBase[T, U, Digraph[T, U]] {
 
   override def equals(o: Any) = o match {
     case g: Digraph[_,_] => super.equals(g)

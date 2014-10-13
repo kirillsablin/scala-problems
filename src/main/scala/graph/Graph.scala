@@ -1,6 +1,19 @@
 package graph
 
-class Graph[T, U] extends GraphBase[T, U] {
+class Graph[T, U] extends GraphBase[T, U, Graph[T, U]] {
+  def isIsomorphicTo(other: Graph[T, U]):Boolean =
+    if (nodes.size != other.nodes.size || edges.size != other.edges.size)
+      false
+    else {
+      val original = nodes.keys.toList
+      val permMaps = other.nodes.keys.toList.permutations.map(e => Map(original zip e: _*)).toList
+
+      !permMaps.forall(m => transformNodes(m) != other)
+    }
+
+  def transformNodes[NewT](map: Map[T, NewT]):Graph[NewT, U] = {
+    Graph.termLabel(nodes.keys.map(map).toList, edges.map(e => (map(e.n1.value), map(e.n2.value), e.value)))
+  }
 
   def edgesToRestOfGraph(nodes:Set[T]): List[Edge] =
       nodes.toList.flatMap( n => this.nodes(n).adj).filter( e => ! (nodes.contains(e.n1.value) == nodes.contains(e.n2.value)))

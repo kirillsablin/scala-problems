@@ -56,4 +56,24 @@ class GraphSpec extends FlatSpec with Matchers {
     )
   }
 
+  "transformNodes" should "rename nodes" in {
+    Graph.fromString("[a-b, b-c, a-c]").transformNodes(Map("a" -> 1, "b" -> 2, "c" ->3)).toString should be (
+      "[1-2, 1-3, 2-3]"
+    )
+  }
+
+  "isIsomorphicTo" should "return false if count of nodes or edges not equals" in {
+    Graph.fromString("[a-b, b-c]") isIsomorphicTo Graph.fromString("[b-c]") should be (false)
+    Graph.fromString("[a-b, b-c]") isIsomorphicTo Graph.fromString("[b-c, a]") should be (false)
+
+  }
+
+  it should "return true if exist nodes transformation to equal graphs" in {
+    Graph.fromString("[a-b]").isIsomorphicTo(Graph.fromString("[5-7]")) should be (true)
+
+    Graph.fromString("[a-b, b-c]") isIsomorphicTo Graph.fromString("[b-c, c-a]") should be (true)
+
+    Graph.fromString("[a-b, c-d]") isIsomorphicTo Graph.fromString("[b-c, c-d, a]") should be (false)
+  }
+
 }
