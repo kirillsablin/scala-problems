@@ -5,10 +5,35 @@ abstract class GraphBase[T, U, +Repr] {
     def toTuple = (n1.value, n2.value, value)
   }
   case class Node(value: T) {
+
+    def degree = adj.size
+
     var adj: List[Edge] = Nil
     // neighbors are all nodes adjacent to this node.
     def neighbors: List[Node] = adj.map(edgeTarget(_, this).get)
   }
+
+  def nodesByDegree:List[Node] = nodes.values.toList.sortWith((n1, n2) => n1.degree > n2.degree)
+
+  def colorNodes:List[(Node, Int)] = {
+    def colorR(prevColor:Int, nodesToColor:List[Node], coloredNodes:List[(Node, Int)]):List[(Node,Int)] = {
+      if (nodesToColor.isEmpty)
+        coloredNodes
+      else {
+        val (toColor, rest) = nodesToColor.foldLeft[(List[Node], List[Node])]((List(), List()))( (acc, node) =>
+          if (acc._1.forall( n => n.neighbors.find( neighbor => neighbor.value == node.value).isEmpty))
+            (node::acc._1, acc._2)
+          else
+            (acc._1, node::acc._2)
+        )
+
+        colorR(prevColor+1, rest, coloredNodes ++ toColor.map( (_, prevColor + 1)))
+      }
+    }
+
+    colorR(0, nodesByDegree, List())
+  }
+
 
   var nodes: Map[T, Node] = Map()
   var edges: List[Edge] = Nil

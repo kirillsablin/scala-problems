@@ -1,6 +1,7 @@
 package graph
 
 class Graph[T, U] extends GraphBase[T, U, Graph[T, U]] {
+
   def isIsomorphicTo(other: Graph[T, U]):Boolean =
     if (nodes.size != other.nodes.size || edges.size != other.edges.size)
       false

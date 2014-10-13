@@ -20,4 +20,9 @@ class DiGraphSpec extends FlatSpec with Matchers {
     )
   }
 
+  "degree" should "return count of outgoing edges" in {
+    Digraph.fromString("[p>q, m>q, k, p>m]").nodes("q").degree should be (0)
+    Digraph.fromString("[p>q, m>q, k, p>m]").nodes("p").degree should be (2)
+  }
+
 }

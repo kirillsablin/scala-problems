@@ -76,4 +76,21 @@ class GraphSpec extends FlatSpec with Matchers {
     Graph.fromString("[a-b, c-d]") isIsomorphicTo Graph.fromString("[b-c, c-d, a]") should be (false)
   }
 
+  "degree" should "return count of connected edjes" in {
+    Graph.fromString("[a-b, b-c, a-c, a-d]").nodes("a").degree should be (3)
+  }
+
+  "nodesByDegree" should "return nodes in order of decreasing degree" in {
+    Graph.fromString("[a-b, b-c, a-c, a-d]").nodesByDegree.toString should be(
+      "List(Node(a), Node(c), Node(b), Node(d))"
+    )
+  }
+
+  "colorNodes" should "return nodes with selected color" in {
+    Graph.fromString("[a-b, b-c, a-c, a-d]").colorNodes.toString should be (
+      "List((Node(a),1), (Node(b),2), (Node(d),2), (Node(c),3))"
+    )
+
+  }
+
 }
