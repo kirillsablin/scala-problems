@@ -86,6 +86,16 @@ abstract class GraphBase[T, U, +Repr] {
     nodes(start).neighbors flatMap( (next) => findPaths(next.value, start)) filter( _.length > 2) map (start::_)
 
 
+  def nodesByDepthFrom(s: T):List[T] = {
+    def dfs(visited:Set[T], frontier:List[T], soFar:List[T]):List[T] = frontier match {
+      case Nil => soFar
+      case current::rest => {
+        dfs(visited + current, nodes(current).neighbors.filter(n => !visited.contains(n.value) && !frontier.contains(n.value)).
+          foldLeft(rest)((newFrontier, n) => n.value :: newFrontier), current :: soFar)
+      }
+    }
 
+    dfs(Set(), List(s), List())
+  }
 
 }

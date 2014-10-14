@@ -93,4 +93,10 @@ class GraphSpec extends FlatSpec with Matchers {
 
   }
 
+  "nodesByDepthFrom" should "return list of nodes in depth-first order" in {
+    Graph.fromString("[a-b, b-c, e, a-c, a-d]").nodesByDepthFrom("d") should be (
+      List("c", "b", "a", "d")
+    )
+  }
+
 }
