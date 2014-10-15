@@ -2,6 +2,24 @@ package graph
 
 class Graph[T, U] extends GraphBase[T, U, Graph[T, U]] {
 
+  def splitGraph:List[List[T]] = {
+    def nextComponent(from:T, visited:Set[T]):(List[T], Set[T]) = {
+      def nextComponentR(frontier:List[T], currentNodes:List[T], visited:Set[T]):(List[T], Set[T]) = frontier match {
+        case n :: nx if visited.contains(n) => nextComponentR(nx, currentNodes, visited)
+        case n :: nx => nextComponentR(nodes(n).neighbors.map(_.value) ++ nx, n::currentNodes, visited + n)
+        case Nil => (currentNodes, visited)
+
+      }
+      nextComponentR(List(from), List(), visited)
+    }
+    nodes.keys.foldLeft((List[List[T]](), Set[T]()))((acc, n) => acc match {
+      case (_, visited) if visited.contains(n) => acc
+      case (lst, visited) =>
+        val (newGraph, newVisited) = nextComponent(n, visited)
+        (newGraph::lst, newVisited)
+    })._1
+  }
+
   def isIsomorphicTo(other: Graph[T, U]):Boolean =
     if (nodes.size != other.nodes.size || edges.size != other.edges.size)
       false

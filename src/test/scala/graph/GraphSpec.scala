@@ -65,7 +65,6 @@ class GraphSpec extends FlatSpec with Matchers {
   "isIsomorphicTo" should "return false if count of nodes or edges not equals" in {
     Graph.fromString("[a-b, b-c]") isIsomorphicTo Graph.fromString("[b-c]") should be (false)
     Graph.fromString("[a-b, b-c]") isIsomorphicTo Graph.fromString("[b-c, a]") should be (false)
-
   }
 
   it should "return true if exist nodes transformation to equal graphs" in {
@@ -90,12 +89,17 @@ class GraphSpec extends FlatSpec with Matchers {
     Graph.fromString("[a-b, b-c, a-c, a-d]").colorNodes.toString should be (
       "List((Node(a),1), (Node(b),2), (Node(d),2), (Node(c),3))"
     )
-
   }
 
   "nodesByDepthFrom" should "return list of nodes in depth-first order" in {
     Graph.fromString("[a-b, b-c, e, a-c, a-d]").nodesByDepthFrom("d") should be (
       List("c", "b", "a", "d")
+    )
+  }
+
+  "splitGraph" should "return list of connected components" in {
+    Graph.fromString("[a-b, c]").splitGraph should be (
+      List(List("a", "b"), List("c"))
     )
   }
 
