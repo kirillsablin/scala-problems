@@ -103,4 +103,10 @@ class GraphSpec extends FlatSpec with Matchers {
     )
   }
 
+  "isBiporate" should "determine whether a given graph is biporate" in {
+    Graph.fromString("[a-b, b-c, c-a]").isBipartite should be(false)
+    Graph.fromString("[a-b, b-c, d]").isBipartite should be (true)
+    Graph.fromString("[a-b, b-c, d, e-f, f-g, g-e, h]").isBipartite should be (false)
+  }
+
 }

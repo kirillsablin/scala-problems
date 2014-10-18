@@ -34,6 +34,7 @@ abstract class GraphBase[T, U, +Repr] {
     colorR(0, nodesByDegree, List())
   }
 
+  def isBipartite:Boolean = colorNodes.forall( _._2 < 3)
 
   var nodes: Map[T, Node] = Map()
   var edges: List[Edge] = Nil

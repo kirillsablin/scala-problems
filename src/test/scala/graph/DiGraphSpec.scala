@@ -25,4 +25,8 @@ class DiGraphSpec extends FlatSpec with Matchers {
     Digraph.fromString("[p>q, m>q, k, p>m]").nodes("p").degree should be (2)
   }
 
+  "isBiporate" should "determine whether a given graph is biporate" in {
+    Digraph.fromString("[a>b, c>a, d>b]").isBipartite should be (true)
+  }
+
 }
